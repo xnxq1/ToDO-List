@@ -28,3 +28,7 @@ class Priority(enum.Enum):
     high = 'high'
     medium = 'medium'
     low = 'low'
+
+class Status(enum.Enum):
+    completed = 'completed'
+    uncompleted = 'uncompleted'
