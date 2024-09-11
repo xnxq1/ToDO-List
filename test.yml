@@ -1,0 +1,8 @@
+services:
+  test-runner:
+    build:
+      context: .
+    volumes:
+      - .:/app
+
+    command: sh -c "pytest -v -s src/tests/"

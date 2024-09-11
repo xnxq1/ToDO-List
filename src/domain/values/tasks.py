@@ -1,11 +1,11 @@
 import enum
 from dataclasses import dataclass
 
-from src.domain.values.base import BaseValueObject, BaseDomainException, VT
+from src.domain.values.base import BaseValueObject, BaseCustomException, VT
 
 
 @dataclass
-class TooLongTitleException(BaseDomainException):
+class TooLongTitleException(BaseCustomException):
     title: str
 
     @property

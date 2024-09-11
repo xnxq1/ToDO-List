@@ -23,7 +23,7 @@ class BaseValueObject(ABC, Generic[VT]):
 
 
 
-class BaseDomainException(Exception):
+class BaseCustomException(Exception):
     @property
     def message(self):
         return f'Произошла ошибка'
