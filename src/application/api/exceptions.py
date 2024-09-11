@@ -8,12 +8,13 @@ from starlette import status
 from src.application.api.responses import ErrorResponse
 from src.domain.values.base import BaseCustomException, BaseCustomException
 from src.domain.values.tasks import TooLongTitleException
-
+from src.infra.db.exceptions import NotTaskException
 
 
 def setup_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(BaseCustomException, error_handler(500))
-    app.add_exception_handler(TooLongTitleException, error_handler(status.HTTP_400_BAD_REQUEST))
+    app.add_exception_handler(TooLongTitleException, error_handler(status.HTTP_400_BAD_REQUEST)),
+    app.add_exception_handler(NotTaskException, error_handler(status.HTTP_400_BAD_REQUEST))
     app.add_exception_handler(Exception, unknown_exception_handler)
 
 

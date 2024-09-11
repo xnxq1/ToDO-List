@@ -19,9 +19,3 @@ class Task:
         return hash(self.id)
 
 
-    def change_priority(self, priority: Priority):
-        self.priority = priority
-
-    def change_status(self, status: Status):
-        self.status = status
-
