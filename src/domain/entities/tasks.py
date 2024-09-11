@@ -1,13 +1,15 @@
 from dataclasses import dataclass, field
-from uuid import uuid4
-
+from uuid import UUID, uuid4
 
 from src.domain.values.tasks import Title, Priority, Status
 
 
 @dataclass(eq=False)
 class Task:
-    id: int
+    id: UUID = field(
+        default_factory=uuid4,
+        kw_only=True
+    )
     title: Title
     priority: Priority
     status: Status

@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from src.domain.entities.tasks import Task as TaskEntity
-
+from uuid import UUID
 
 class TaskReader(ABC):
 
     @abstractmethod
-    async def get_task_by_id(self, task_id: int):
+    async def get_task_by_id(self, task_id: UUID):
         ...
 
     @abstractmethod
@@ -19,7 +19,7 @@ class TaskReader(ABC):
 class TaskWriter(ABC):
 
     @abstractmethod
-    async def delete_task(self, task: TaskEntity):
+    async def delete_task(self, task_id: UUID):
         ...
 
     @abstractmethod

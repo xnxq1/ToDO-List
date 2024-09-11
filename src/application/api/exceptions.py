@@ -8,14 +8,15 @@ from starlette import status
 from src.application.api.responses import ErrorResponse
 from src.domain.values.base import BaseCustomException, BaseCustomException
 from src.domain.values.tasks import TooLongTitleException
-from src.infra.db.exceptions import NotTaskException
+from src.infra.db.exceptions import NotTaskException, RepoException
 
 
 def setup_exception_handlers(app: FastAPI) -> None:
     app.add_exception_handler(BaseCustomException, error_handler(500))
-    app.add_exception_handler(TooLongTitleException, error_handler(status.HTTP_400_BAD_REQUEST)),
+    app.add_exception_handler(TooLongTitleException, error_handler(status.HTTP_400_BAD_REQUEST))
     app.add_exception_handler(NotTaskException, error_handler(status.HTTP_400_BAD_REQUEST))
     app.add_exception_handler(Exception, unknown_exception_handler)
+    app.add_exception_handler(RepoException, error_handler(status.HTTP_500_INTERNAL_SERVER_ERROR))
 
 
 def app_error_handler(request: Request, exc: BaseCustomException, status_code: int) -> ORJSONResponse:

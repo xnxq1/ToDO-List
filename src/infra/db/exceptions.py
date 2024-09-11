@@ -10,3 +10,8 @@ class NotTaskException(BaseCustomException):
     @property
     def message(self):
         return f'Задачи с id {self.task_id} не существует'
+
+class RepoException(BaseCustomException):
+    @property
+    def message(self):
+        return f'Ошибка репозитория'

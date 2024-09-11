@@ -1,14 +1,16 @@
 from typing import List
 
+from sqlalchemy.exc import DBAPIError, IntegrityError
+
 from src.infra.db.converter import convert_db_model_to_task, convert_task_to_db_model
 from src.infra.db.exceptions import NotTaskException
-from src.infra.db.repo.base import SQLAlchemyBase, Filter
+from src.infra.db.repo.base import SQLAlchemyBase, Filter, check_exception
 from src.infra.db.repo.interfaces import TaskReader, TaskWriter, UOW
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from src.infra.db.models import Task as TaskDb
 from src.domain.entities.tasks import Task as TaskEntity
-
-
+from uuid import UUID
+from asyncpg.exceptions import UniqueViolationError
 
 class TaskReaderImpl(SQLAlchemyBase, TaskReader):
 
@@ -32,18 +34,24 @@ class TaskReaderImpl(SQLAlchemyBase, TaskReader):
 
 class TaskWriterImpl(SQLAlchemyBase, TaskWriter):
 
+    @check_exception
+    async def delete_task(self, task_id: UUID) -> None:
+        stmt = delete(TaskDb).where(TaskDb.id == task_id)
+        await self.session.execute(stmt)
 
-    async def delete_task(self, task: TaskEntity) -> None:
-        task_db: TaskDb = convert_task_to_db_model(task)
-        await self.session.delete(task_db)
 
+    @check_exception
     async def update_task(self, task: TaskEntity) -> None:
         task_db: TaskDb = convert_task_to_db_model(task)
         await self.session.merge(task_db)
 
+
+    @check_exception
     async def add_task(self, task: TaskEntity) -> None:
-        task_db: TaskDb = convert_task_to_db_model(task)
-        self.session.add(task_db)
+
+            task_db: TaskDb = convert_task_to_db_model(task)
+            self.session.add(task_db)
+            await self.session.flush()
 
 
 class UnitOfWork(SQLAlchemyBase, UOW):
